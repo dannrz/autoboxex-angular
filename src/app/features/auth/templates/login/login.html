@@ -1,0 +1,11 @@
+<div class="min-h-screen flex items-center justify-center p-4">
+    <p-card class="max-w-sm w-full rounded-5" [header]="title()" subheader="Administrative system">
+        <ng-template #header>
+            <img src="images/autoboxex.jpg" [alt]="title()" class="min-h-full min-w-full rounded-t-xl">
+        </ng-template>
+        <auth-login-form />
+        <ng-template #footer>
+            <auth-login-footer (login)="onLogin()" />
+        </ng-template>
+    </p-card>
+</div>

@@ -1,0 +1,10 @@
+<form [formGroup]="form" (ngSubmit)="send()" class="space-y-6 mt-3">
+    <p-float-label variant="on">
+        <label pLabel for="username">Nombre de usuario</label>
+        <input pInputText pSize="large" id="username" type="email" formControlName="username" class="w-full" />
+    </p-float-label>
+    <p-float-label variant="on">
+        <label pLabel for="password" class="flex-1">Contraseña</label>
+        <input pInputText pSize="large" id="password" type="password" formControlName="password" class="w-full" />
+    </p-float-label>
+</form>
