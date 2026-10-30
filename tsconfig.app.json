@@ -3,7 +3,21 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": []
+    "types": [],
+    "paths": {
+      "@app/*": [
+        "./src/app/*"
+      ],
+      "@env/*": [
+        "./src/environments/*"
+      ],
+      "@shared/*": [
+        "./src/app/shared/*"
+      ],
+      "@core/*": [
+        "./src/app/core/*"
+      ]
+    }
   },
   "include": [
     "src/**/*.ts"

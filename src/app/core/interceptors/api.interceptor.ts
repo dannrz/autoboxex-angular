@@ -1,12 +1,14 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { HttpContextToken, HttpInterceptorFn } from '@angular/common/http';
+import { environment } from '@env/environment';
+
+export const SKIP_API_PREFIX = new HttpContextToken<boolean>(() => false);
 
 export const apiInterceptor: HttpInterceptorFn = (req, next) => {
-  const { api } = environment;
   const token = localStorage.getItem('access_token');
+  const skipPrefix = req.context.get(SKIP_API_PREFIX);
 
   req = req.clone({
-    url: `${api}${req.url}`,
+    url: skipPrefix ? req.url : `${environment.api}${req.url}`,
     setHeaders: token ? { Authorization: `Bearer ${token}` } : {}
   });
 

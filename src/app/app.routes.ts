@@ -8,7 +8,7 @@ export const routes: Routes = [
     },
     {
         path: 'login',
-        loadComponent: () => import("./features/auth/templates/login/login").then(m => m.Login),
+        loadComponent: () => import("./layouts/auth/pages/login/login").then(m => m.Login),
         title: 'Autoboxex - Login'
     }
 ];

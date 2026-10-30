@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component, output, OutputEmitterRef } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { User } from '@primeicons/angular/user';
 
@@ -8,5 +8,5 @@ import { User } from '@primeicons/angular/user';
   templateUrl: './login-footer.html',
 })
 export class LoginFooter {
-  protected readonly login = output<void>();
+  protected readonly login: OutputEmitterRef<void> = output<void>();
 }

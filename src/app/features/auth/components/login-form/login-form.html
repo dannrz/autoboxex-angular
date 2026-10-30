@@ -1,10 +1,27 @@
 <form [formGroup]="form" (ngSubmit)="send()" class="space-y-6 mt-3">
-    <p-float-label variant="on">
-        <label pLabel for="username">Nombre de usuario</label>
-        <input pInputText pSize="large" id="username" type="email" formControlName="username" class="w-full" />
-    </p-float-label>
-    <p-float-label variant="on">
-        <label pLabel for="password" class="flex-1">Contraseña</label>
-        <input pInputText pSize="large" id="password" type="password" formControlName="password" class="w-full" />
-    </p-float-label>
+    <div class="flex flex-col gap-1">
+        <p-float-label variant="on">
+            <label pLabel for="username">Nombre de usuario</label>
+            <input pInputText pSize="large" id="username" type="email" formControlName="username" class="w-full"
+                [invalid]="isInvalid('username')" />
+        </p-float-label>
+        @if (isInvalid('username')) {
+        <p-message severity="error" size="small" variant="simple">
+            El nombre de usuario es obligatorio
+        </p-message>
+        }
+    </div>
+
+    <div class="flex flex-col gap-1">
+        <p-float-label variant="on">
+            <label pLabel for="password">Contraseña</label>
+            <input pInputText pSize="large" id="password" type="password" formControlName="password" class="w-full"
+                [invalid]="isInvalid('password')" (keydown.enter)="send()" />
+        </p-float-label>
+        @if (isInvalid('password')) {
+        <p-message severity="error" size="small" variant="simple">
+            La contraseña es obligatoria
+        </p-message>
+        }
+    </div>
 </form>

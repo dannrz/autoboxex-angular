@@ -4,7 +4,8 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 import AutoboxexPreset from './config/primeng/AutoboxexPreset';
-import { apiInterceptor } from './core/interceptors/api.interceptor';
+import { apiInterceptor } from '@core/interceptors/api.interceptor';
+import { environment } from '@env/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,8 +14,9 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([apiInterceptor])),
     providePrimeNG({
       theme: {
-        preset: AutoboxexPreset
-      }
+        preset: AutoboxexPreset,
+      },
+      license: environment.primeUIKey
     })
   ]
 };

@@ -1,7 +1,7 @@
 import { Component, signal, viewChild } from '@angular/core';
 import { CardModule } from 'primeng/card';
-import { LoginFooter } from '../../components/login-footer/login-footer';
-import { LoginForm } from '../../components/login-form/login-form';
+import { LoginFooter } from '@app/features/auth/components/login-footer/login-footer';
+import { LoginForm } from '@app/features/auth/components/login-form/login-form';
 
 @Component({
   imports: [CardModule, LoginFooter, LoginForm],
