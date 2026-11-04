@@ -4,8 +4,20 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-    user: unknown; // reemplázalo por tu interfaz User
+    user: User;
     access_token: string;
     token_type: 'Bearer';
     expires_at: string;
+}
+
+export interface User {
+    name: string;
+    role: Role;
+    status: string;
+    username: string;
+}
+
+export interface Role {
+    description: string;
+    role_name: string;
 }

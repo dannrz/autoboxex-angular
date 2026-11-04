@@ -7,6 +7,11 @@ export const routes: Routes = [
         pathMatch: 'full'
     },
     {
+        path: 'home',
+        loadComponent: () => import("./layouts/app/pages/app-layout/app-layout").then(m => m.AppLayout),
+        title: 'Inicio'
+    },
+    {
         path: 'login',
         loadComponent: () => import("./layouts/auth/pages/login/login").then(m => m.Login),
         title: 'Autoboxex - Login'
