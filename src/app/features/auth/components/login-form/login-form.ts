@@ -8,7 +8,6 @@ import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { AuthService } from '../../services/auth.service';
-import { LoginResponse } from '../../interfaces/login.interface';
 import { Router } from '@angular/router';
 
 @Component({
@@ -41,20 +40,12 @@ export class LoginForm {
 
     this.service.login(this.form.getRawValue())
       .pipe(
-        tap(data => this.handleLoginSuccess(data)),
+        tap(data => this.router.navigate(['/'])),
         catchError((error) => {
           this.toast.add({ severity: 'error', summary: 'Error al iniciar sesión', detail: 'Credenciales incorrectas, por favor intente nuevamente.', life: 3000 });
           return throwError(() => error);
         })
       )
       .subscribe();
-  }
-
-  private handleLoginSuccess(data: LoginResponse): void {
-    localStorage.setItem('access_token', data.access_token);
-    localStorage.setItem("expires_at", data.expires_at);
-    localStorage.setItem('user', JSON.stringify(data.user));
-
-    this.router.navigate(['home']); // Redirect to the home page after successful login
   }
 }
