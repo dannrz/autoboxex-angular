@@ -1,4 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { filter, map } from 'rxjs';
 import { AvatarModule } from 'primeng/avatar';
 import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
@@ -6,67 +9,34 @@ import { Plus } from '@primeicons/angular/plus';
 import { ChevronDown } from '@primeicons/angular/chevron-down';
 import { EllipsisV } from '@primeicons/angular/ellipsis-v';
 import { PIcon } from '@primeicons/angular/p-icon';
-
-interface NavItem {
-  icon: string;
-  label: string;
-  isActive?: boolean;
-  badge?: string;
-  subItems?: { label: string; isActive?: boolean }[];
-}
-
-interface NavGroup {
-  label: string;
-  action?: boolean;
-  items: NavItem[];
-}
+import { NavGroup, NavItem, Roles } from '../../interfaces';
+import { MENU_BY_ROLE } from '../../constants/Menu';
 
 @Component({
-  imports: [AvatarModule, SidebarModule, ButtonModule, Plus, ChevronDown, EllipsisV, PIcon],
+  imports: [AvatarModule, SidebarModule, ButtonModule, Plus, ChevronDown, EllipsisV, PIcon, RouterLink, RouterLinkActive],
   templateUrl: './sidebar-menu.html',
   selector: 'app-sidebar-menu',
   host: { style: 'display: contents' }
 })
-export class SidebarMenu {
-  isMobile = signal<boolean>(false);
+export class SidebarMenu implements OnInit, OnDestroy {
+  protected readonly navGroups: NavGroup[] = MENU_BY_ROLE[Roles.Admin];
+  private router = inject(Router);
 
-  open = signal<boolean>(false);
+  protected isMobile = signal<boolean>(false);
+  protected open = signal<boolean>(false);
+
+  private currentUrl = toSignal(
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      map((e) => e.urlAfterRedirects)
+    ),
+    { initialValue: this.router.url }
+  );
 
   private mql?: MediaQueryList;
-
   private mqlListener?: (e: MediaQueryListEvent) => void;
 
-  navGroups: NavGroup[] = [
-    {
-      label: 'Navigation',
-      items: [
-        { icon: 'home', label: 'Home', isActive: true },
-        { icon: 'inbox', label: 'Inbox', badge: '12' },
-        { icon: 'search', label: 'Search' },
-        { icon: 'bell', label: 'Notifications', badge: '3' }
-      ]
-    },
-    {
-      label: 'Projects',
-      action: true,
-      items: [
-        { icon: 'chart-bar', label: 'Analytics', subItems: [{ label: 'Overview', isActive: true }, { label: 'Reports' }, { label: 'Real-time' }] },
-        { icon: 'users', label: 'Team' },
-        { icon: 'calendar', label: 'Calendar' },
-        { icon: 'folder', label: 'Documents', subItems: [{ label: 'Shared' }, { label: 'Private' }, { label: 'Archived' }] }
-      ]
-    },
-    {
-      label: 'Billing',
-      items: [
-        { icon: 'credit-card', label: 'Payments' },
-        { icon: 'shopping-cart', label: 'Orders' },
-        { icon: 'star', label: 'Subscriptions' }
-      ]
-    }
-  ];
-
-  ngOnInit() {
+  public ngOnInit() {
     if (typeof window === 'undefined') return;
     this.mql = window.matchMedia('(max-width: 1023px)');
     this.isMobile.set(this.mql.matches);
@@ -78,11 +48,12 @@ export class SidebarMenu {
     this.mql.addEventListener('change', this.mqlListener);
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     this.mql?.removeEventListener('change', this.mqlListener!);
   }
 
-  hasActiveSub(item: NavItem): boolean {
-    return !!item.subItems?.some((s) => s.isActive);
+  public hasActiveSub(item: NavItem): boolean {
+    const url = this.currentUrl();
+    return !!item.subItems?.some((s) => url === s.route || url.startsWith(`${s.route}/`) || url.startsWith(`${s.route}?`));
   }
 }

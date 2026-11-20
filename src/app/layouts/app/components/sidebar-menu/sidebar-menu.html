@@ -1,5 +1,5 @@
 @if (isMobile() && open()) {
-<p-sidebar-backdrop class="absolute!" />
+<p-sidebar-backdrop />
 }
 <p-sidebar id="preview" [collapsible]="isMobile() ? 'offcanvas' : 'icon'" [overlay]="isMobile()" [(open)]="open"
     [openOnHover]="true">
@@ -31,23 +31,31 @@
                         <p-sidebar-menu>
                             @for (item of group.items; track item.label) {
                             <p-sidebar-menu-item [collapsible]="!!item.subItems" [defaultOpen]="hasActiveSub(item)">
-                                <button pSidebarMenuButton [isActive]="!!item.isActive">
+                                @if (item.subItems) {
+                                <button pSidebarMenuButton [isActive]="hasActiveSub(item)">
                                     <svg [pIcon]="item.icon"></svg>
                                     <span>{{ item.label }}</span>
-                                    @if (item.subItems) {
                                     <svg data-p-icon="chevron-down" class="ml-auto"></svg>
-                                    }
                                 </button>
+                                } @else {
+                                <a pSidebarMenuButton [routerLink]="item.route" routerLinkActive
+                                    [routerLinkActiveOptions]="{ exact: item.route === '/' }"
+                                    #rla="routerLinkActive" [isActive]="rla.isActive">
+                                    <svg [pIcon]="item.icon"></svg>
+                                    <span>{{ item.label }}</span>
+                                </a>
+                                }
                                 @if (item.badge) {
                                 <p-sidebar-menu-badge>{{ item.badge }}</p-sidebar-menu-badge>
                                 }
                                 @if (item.subItems) {
                                 <p-sidebar-menu-sub>
-                                    @for (sub of item.subItems; track sub.label) {
+                                    @for (sub of item.subItems; track sub.route) {
                                     <p-sidebar-menu-sub-item>
-                                        <button pSidebarMenuSubButton [isActive]="!!sub.isActive">
+                                        <a pSidebarMenuSubButton [routerLink]="sub.route" routerLinkActive
+                                            #subRla="routerLinkActive" [isActive]="subRla.isActive">
                                             <span>{{ sub.label }}</span>
-                                        </button>
+                                        </a>
                                     </p-sidebar-menu-sub-item>
                                     }
                                 </p-sidebar-menu-sub>
