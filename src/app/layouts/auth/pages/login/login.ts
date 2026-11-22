@@ -12,6 +12,7 @@ export class Login {
   private readonly loginForm = viewChild.required(LoginForm);
 
   public onLogin() {
+    this.loginForm().isLoading.set(true);
     this.loginForm()?.send();
   }
 }

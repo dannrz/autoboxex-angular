@@ -5,7 +5,7 @@
         </ng-template>
         <auth-login-form />
         <ng-template #footer>
-            <auth-login-footer (login)="onLogin()" />
+            <auth-login-footer (login)="onLogin()" [isLoading]="loginForm().isLoading()" />
         </ng-template>
     </p-card>
 </div>

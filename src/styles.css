@@ -1,1 +1,4 @@
+@layer theme, base, primeng, components, utilities;
 @import 'tailwindcss';
+
+@custom-variant dark (&:where(.app-dark, .app-dark *));

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { catchError, tap, throwError } from 'rxjs';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -22,6 +22,8 @@ export class LoginForm {
   private readonly toast: MessageService = inject(MessageService);
   private readonly router: Router = inject(Router);
 
+  public readonly isLoading = signal(false);
+
   protected readonly form = this.formBuilder.group({
     username: ['', Validators.required],
     password: ['', Validators.required]
@@ -35,13 +37,20 @@ export class LoginForm {
   public send(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.isLoading.set(false);
       return;
     }
 
+    this.isLoading.set(true);
+
     this.service.login(this.form.getRawValue())
       .pipe(
-        tap(data => this.router.navigate(['/'])),
+        tap(data => {
+          this.router.navigate(['/']);
+          this.isLoading.set(false);
+        }),
         catchError((error) => {
+          this.isLoading.set(false);
           this.toast.add({ severity: 'error', summary: 'Error al iniciar sesión', detail: 'Credenciales incorrectas, por favor intente nuevamente.', life: 3000 });
           return throwError(() => error);
         })

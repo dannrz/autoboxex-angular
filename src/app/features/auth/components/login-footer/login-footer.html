@@ -1,7 +1,13 @@
 <div class="flex flex-col gap-4 mt-5">
-    <button pButton class="w-full" (click)="login.emit()">
+    @if(!isLoading()){
+    <button pButton class="w-full" (click)="loginStart()">
         <svg data-p-icon="user"></svg> Iniciar sesión
     </button>
+    }@else {
+    <button pButton class="w-full" disabled>
+        <p-progress-spinner ariaLabel="loading" class="w-6 h-6" /> Iniciando...
+    </button>
+    }
     <div class="mt-2 text-center text-surface-500 text-sm">
         ¿Olvidaste tu contraseña?
         <button pButton variant="link" class="p-0">Recuperar</button>
